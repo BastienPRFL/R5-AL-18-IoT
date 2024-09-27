@@ -4,6 +4,8 @@
 
 ## Pour le visualiser
 
+Lien vers l'api : https://data.toulouse-metropole.fr/explore/dataset/points-dapport-volontaire-dechets-et-moyens-techniques/export/
+
 * Télécharger tout le code source et décompresser l'archive *.zip
 * $cd R5-AL-18-IoT-master
 * $mkdocs serve
