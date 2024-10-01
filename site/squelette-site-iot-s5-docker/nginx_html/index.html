@@ -46,9 +46,34 @@
 				.addTo(mymap)
 				.bindPopup('Presque chez moi.')
 				.openPopup();
-				
 
-			fetch('geoloc_datas.json')
+
+			function placeMarker(i, lat, lon) {
+				L.marker([lat, lon])
+					.addTo(mymap)
+					.bindPopup(i.toString())
+					.openPopup();
+			}
+
+			function placeMarkers(data, nb) {
+				
+				for (let i = 1; i< nb; i++){
+					console.log(i)
+					placeMarker(i, data[i].lat, data[i].lon)
+				}
+			}
+
+			async function getGeolocData() {
+				const reponse = await fetch("geoloc_datas.json");
+					const data = await reponse.json();
+					/* console.log(data.hasOwnProperty("1"));
+					console.log(data[1]);
+					console.log(data[1].lon); */
+					placeMarkers(data, Object.keys(data).length)
+			}
+
+			placeMarker(1, 43.588726994707955, 1.3371280021702647);
+			getGeolocData();
 
 		</script>
 	</body>
