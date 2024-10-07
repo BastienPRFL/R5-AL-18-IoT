@@ -37,22 +37,11 @@
 
 			var mymap = L.map('mapid').setView([43.6, 1.43], 15).addLayer(osm);
 
-			L.marker([43.6, 1.43])
-				.addTo(mymap)
-				.bindPopup('Un popup CSS<br />Personnalisable.')
-				.openPopup();
-
-			L.marker([43.6147971801701, 1.4497471242945006])
-				.addTo(mymap)
-				.bindPopup('Presque chez moi.')
-				.openPopup();
-
-
 			function placeMarker(i, lat, lon) {
 				L.marker([lat, lon])
 					.addTo(mymap)
 					.bindPopup(i.toString())
-					.openPopup();
+					
 			}
 
 			function placeMarkers(data, nb) {
@@ -66,13 +55,9 @@
 			async function getGeolocData() {
 				const reponse = await fetch("geoloc_datas.json");
 					const data = await reponse.json();
-					/* console.log(data.hasOwnProperty("1"));
-					console.log(data[1]);
-					console.log(data[1].lon); */
-					placeMarkers(data, Object.keys(data).length)
+					placeMarkers(data, 501 /* Object.keys(data).length */) //On génère les 500 premiers points pour éviter des pertes de performance
 			}
 
-			placeMarker(1, 43.588726994707955, 1.3371280021702647);
 			getGeolocData();
 
 		</script>
