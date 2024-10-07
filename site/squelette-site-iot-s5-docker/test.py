@@ -13,6 +13,7 @@ with open('points-dapport-volontaire-dechets-et-moyens-techniques.json', 'r') as
             dic[i] = {
                 'lon' : data['geo_point_2d']['lon'],
                 'lat' : data['geo_point_2d']['lat'],
+                'stockage' : 5
             }
             
             i += 1
