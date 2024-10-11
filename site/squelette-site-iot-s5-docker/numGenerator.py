@@ -1,6 +1,7 @@
 import os
 import random
 import json
+import time
 
 # Fonction pour générer un nombre aléatoire supérieur à la base
 def random_greater_than_base(base):
@@ -22,16 +23,21 @@ def write_json_file(file_path, data):
 current_dir = os.path.dirname(__file__)
 file_path = os.path.join(current_dir, 'geoloc_datas.json')
 
-# Charger les données du fichier JSON existant
-geoloc_data = read_json_file(file_path)
+# Boucle pour mettre à jour le fichier toutes les 30 secondes
+while True:
+    # Charger les données du fichier JSON existant
+    geoloc_data = read_json_file(file_path)
 
-# Générer un nombre aléatoire pour chaque entrée dans le fichier JSON
-base = 0
-for key in geoloc_data.keys():
-    number = random_greater_than_base(base)
-    geoloc_data[key]['stockage'] = number
+    # Générer un nombre aléatoire pour chaque entrée dans le fichier JSON
+    base = 0
+    for key in geoloc_data.keys():
+        number = random_greater_than_base(base)
+        geoloc_data[key]['stockage'] = number
 
-# Sauvegarder les nouvelles données dans le fichier JSON
-write_json_file(file_path, geoloc_data)
+    # Sauvegarder les nouvelles données dans le fichier JSON
+    write_json_file(file_path, geoloc_data)
 
-print("Mise à jour du fichier avec les valeurs de stockage effectuée.")
+    print("Mise à jour du fichier avec les valeurs de stockage effectuée.")
+
+    # Attendre 30 secondes avant la prochaine mise à jour
+    time.sleep(30)
