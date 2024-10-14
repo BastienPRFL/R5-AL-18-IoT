@@ -3,9 +3,12 @@ import json
 import os
 from influxdb_client import InfluxDBClient, Point, WritePrecision, WriteOptions
 
+# user : Loufox
+# password : Alaba5BUT3
+
 # Configuration de l'accès à InfluxDB
 url = "http://localhost:8086"  # Change si nécessaire
-token = os.environ.get("INFLUXDB_TOKEN")
+token = "8c1183f7cd621185018e9e6a60311095895ec55d443820b25ddfe963cf226934"
 org = "Alaba5"
 bucket = "Alaba"
 
@@ -23,12 +26,12 @@ def read_json_data(file_path):
 # Fonction pour écrire les données dans InfluxDB
 def write_to_influxdb(data):
     for id, record in data.items():
-        lon = record.get('lon')
-        if lon:
+        stock = record.get('stockage')
+        if stock:
             point = (
-                Point("location_data")  # Nom de la mesure
+                Point("stock_data")  # Nom de la mesure
                 .tag("id", id)  # Ajout de l'id en tant que tag
-                .field("longitude", lon)  # Ajout de la longitude en champ
+                .field("stockage", stock)  # Ajout de la longitude en champ
                 .time(time.time_ns(), WritePrecision.NS)  # Ajout du timestamp
             )
             write_api.write(bucket=bucket, org=org, record=point)
@@ -42,7 +45,7 @@ def write_periodically(file_path, interval):
         time.sleep(interval)
 
 # Définir l'intervalle en secondes (par exemple, écrire toutes les 10 secondes)
-interval = 10
+interval = 30
 json_file_path = "nginx_html/geoloc_datas.json"  # Chemin du fichier JSON
 
 write_periodically(json_file_path, interval)

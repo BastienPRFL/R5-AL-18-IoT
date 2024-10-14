@@ -1,0 +1,42 @@
+from(bucket: "Alaba")
+  |> range(start: v.timeRangeStart, stop: v.timeRangeStop)
+  |> filter(fn: (r) => r["_measurement"] == "stock_data")
+  |> filter(fn: (r) => r["_field"] == "stockage")
+  |> group(columns: ["id"])
+  |> last(column: "_time")
+  |> filter(fn: (r) => r._value > 95)
+  |> group()
+  |> count()
+
+
+
+
+from(bucket: "Alaba")
+  |> range(start: v.timeRangeStart, stop: v.timeRangeStop)
+  |> filter(fn: (r) => r["_measurement"] == "stock_data")
+  |> filter(fn: (r) => r["_field"] == "stockage")
+  |> group(columns: ["id"])
+  |> last(column: "_time") 
+  |> map(fn: (r) => ({
+        r with
+        category: if r._value >= 90 then "90-100" 
+                  else if r._value >= 80 then "80-90"
+                  else if r._value >= 70 then "70-80"
+                  else if r._value >= 60 then "60-70"
+                  else if r._value >= 50 then "50-60"
+                  else if r._value >= 40 then "40-50"
+                  else if r._value >= 30 then "30-40"
+                  else if r._value >= 20 then "20-30"
+                  else if r._value >= 10 then "10-20"
+                  else "0-10"
+  }))
+  |> group(columns: ["category"])
+  |> count(column: "_value")
+  |> rename(columns: { _value: "count" })
+  |> yield(name: "grouped_counts")
+
+
+
+logins grafana : 
+  admin
+  admin

@@ -1,9 +1,20 @@
-import influxdb_client, os, time
-from influxdb_client import InfluxDBClient, Point, WritePrecision
-from influxdb_client.client.write_api import SYNCHRONOUS
+import os
+from influxdb_client import InfluxDBClient
 
-token = os.environ.get("INFLUXDB_TOKEN")
-org = "Alaba5"
-url = "http://localhost:8086"
+# Configuration de la connexion à InfluxDB
+url = "http://localhost:8086"  # Remplace si nécessaire
+token = os.environ.get("INFLUXDB_TOKEN")  # Ton token d'accès
+org = "Alaba5"  # Nom de ton organisation
 
-write_client = influxdb_client.InfluxDBClient(url=url, token=token, org=org)
+
+#Token Graphana (à regénérer) : 8c1183f7cd621185018e9e6a60311095895ec55d443820b25ddfe963cf226934
+
+# Créer une connexion à InfluxDB
+client = InfluxDBClient(url=url, token=token)
+
+# Test de connexion
+health = client.health()
+print(health.status)
+
+# Fermer la connexion (lorsque tu as terminé)
+client.close()
