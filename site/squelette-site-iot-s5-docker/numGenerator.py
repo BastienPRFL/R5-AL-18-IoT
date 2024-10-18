@@ -4,7 +4,6 @@ import json
 import time
 import paho.mqtt.client as mqtt
 
-
 broker = "localhost"
 port = 1884
 topic = "recupverres"
@@ -20,42 +19,10 @@ def read_json_file(file_path):
     with open(file_path, 'r') as file:
         return json.load(file)
     
-
-# Fonction pour écrire les données mises à jour dans un fichier JSON
-def write_json_file(file_path, data):
-    with open(file_path, 'w') as file:
-        json.dump(data, file, indent=2)
-
-# Obtenir le chemin absolu du fichier JSON
-current_dir = os.path.dirname(__file__)
-file_path = os.path.join(current_dir, 'nginx_html/geoloc_datas.json')
-
-# Boucle pour mettre à jour le fichier toutes les 30 secondes
-"""while True:
-    # Charger les données du fichier JSON existant
-    geoloc_data = read_json_file(file_path)
-
-    # Générer un nombre aléatoire pour chaque entrée dans le fichier JSON
-    base = 0
-    for key in geoloc_data.keys():
-        number = random_greater_than_base(base)
-        geoloc_data[key]['stockage'] = number
-
-    # Sauvegarder les nouvelles données dans le fichier JSON
-    write_json_file(file_path, geoloc_data)
-    # Sauvegarder les nouvelles données dans le fichier JSON
-    write_json_file(file_path, geoloc_data)
-
-    print(f"Mise à jour du fichier avec les valeurs de stockage effectuée à {time.strftime('%Y-%m-%d %H:%M:%S')}")
-
-    # Attendre 30 secondes avant la prochaine mise à jour
-    time.sleep(30)
-"""
-
+# Fonction pour envoyer les données sur MQTT
 def envoi_donnees_recupverres(client, recupverres):
     dico_donnees = {}
     for rec in recupverres:
-        #datas = rec.get('fields', {})
         lon = recupverres[rec].get('lon')
         lat = recupverres[rec].get('lat')
         stock = random_greater_than_base(1)
@@ -66,15 +33,15 @@ def envoi_donnees_recupverres(client, recupverres):
         }
 
     envoi_data = json.dumps(dico_donnees)
-    client.publish(topic,envoi_data)
+    client.publish(topic, envoi_data)
     print("Mise à jour des données")
     print(envoi_data)
 
-
-
+# Lire les données du fichier JSON
 recupverres = read_json_file("nginx_html/geoloc_datas.json")
 print("debut")
 
+# Fonction appelée lors de la connexion à MQTT
 def sur_connexion(client, user_datas, flags, retour):
     print("Connecté à MQTT, code de retour : " + str(retour))
 
@@ -83,6 +50,12 @@ client.on_connect = sur_connexion
 client.connect(broker, port, 60)
 client.loop_start()
 
+# Boucle principale pour envoyer les données périodiquement
 while True:
+    try:
         envoi_donnees_recupverres(client, recupverres)
         time.sleep(30)
+    except KeyboardInterrupt:
+        print("\nArrêt du programme.")
+        client.disconnect()
+        break  # Interrompt la boucle uniquement si une interruption clavier est détectée
