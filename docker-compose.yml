@@ -34,10 +34,13 @@ services:
       image: grafana/grafana
       container_name: grafana
       restart: unless-stopped
+      user: "104"
       ports:
-      - '3000:3000'
+        - '3000:3000'
       volumes:
         - grafana-storage:/var/lib/grafana
+      depends_on:
+        - influxdb
     
 
 volumes:
