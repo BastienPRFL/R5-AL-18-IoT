@@ -1,6 +1,6 @@
 # Ressource R5-AL-18 : IoT 
 
-
+VOIR LE GUIDE DE LANCEMENT PRESENT ICI : https://github.com/BastienPRFL/R5-AL-18-IoT/blob/master/Mise%20en%20route%20Application%20IOT%20R%C3%A9cup'verres.pdf
 
 ## Pour le visualiser
 
